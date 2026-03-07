@@ -4,7 +4,7 @@ Bu proje, Python kullanarak araçların özelliklerine göre fiyat tahmini yapma
 
 ## Kullanılan Teknolojiler
 * Python
-* Veri seti (JSON)
+* Veri seti (CSV)
 
 ### Proje Durumu
 
@@ -12,6 +12,9 @@ Bu proje, Python kullanarak araçların özelliklerine göre fiyat tahmini yapma
 - [ ] Ağır hasar kaydı parametresi eklenmesi
 - [ ] Lokal boyalı parametresi eklenmesi
 - [ ] Tramer kaydı parametresi eklenmesi
-- [ ] Veri setindeki fiyat katsayılarının güncellenmesi
-- [ ] Modelin eğitilmesi ve test edilmesi
+- [x] Veri setindeki fiyat katsayılarının güncellenmesi
+- [x] Modelin eğitilmesi ve test edilmesi
+- [ ] DAha geniş bir veri setinin elde edilmesi (kaggle ya da manuel)
 - [ ] Arayüz tasarımı
+- [ ] tarayıcı modu 
+- [ ] mobil modu
