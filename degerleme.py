@@ -1,36 +1,60 @@
 import pandas as pd
 import xgboost as xgb
 import os
+import numpy as np
 
-dosya_yolu = 'veri_seti.csv'
+current_dir = os.path.dirname(os.path.abspath(__file__))
+dosya_yolu = os.path.join(current_dir, "train_ready_data.csv")
 
 if not os.path.exists(dosya_yolu):
-    print("Hata: veri_seti.csv dosyasi bulunamadi.")
+    print(f"Hata: {dosya_yolu} bulunamadı! Önce preprocessing.py çalıştırılmalı.")
     exit()
 
 df = pd.read_csv(dosya_yolu)
-df = df.dropna(subset=['Fiyat', 'Yil', 'Km'])
 
-df_encoded = pd.get_dummies(df, columns=['Marka', 'Model'])
+# Hedef değişken (y) ve özellikler (X)
+X = df.drop('Fiyat', axis=1)
+y = df['Fiyat']
 
-X = df_encoded.drop('Fiyat', axis=1)
-y = df_encoded['Fiyat']
+#(XGBoost Hyperparameters)
+model = xgb.XGBRegressor(
+    n_estimators=1000, 
+    learning_rate=0.05, 
+    max_depth=6, 
+    random_state=42,
+    objective='reg:squarederror'
+)
 
-model = xgb.XGBRegressor(random_state=42) #
+print("Model eğitiliyor, lütfen bekleyin...")
 model.fit(X, y)
+print("Eğitim tamamlandı!")
 
-kullanici_araci = pd.DataFrame({
-    'Yil': [2020],
-    'Km': [55000],
-    'Kaput_Boyali': [1],
-    'Agir_Hasar': [0],
-    'Marka_BMW': [0],
-    'Marka_Fiat': [1],
-    'Model_3 Serisi': [0],
-    'Model_Egea': [1]
-})
+def fiyat_tahmin_et(yil, km, marka_kodu, vites_kodu, hasar_sozlugu):
+    # Eğitimdeki tüm sütunları baz alarak boş bir veri seti oluştur
+    tahmin_df = pd.DataFrame(columns=X.columns)
+    tahmin_df.loc[0] = 0 # Her şeyi sıfırla başla
+    
+    # Bilinen değerleri ata
+    tahmin_df['Yil'] = yil
+    tahmin_df['Km'] = km
+    tahmin_df['Marka'] = marka_kodu
+    tahmin_df['Vites'] = vites_kodu
+    
+    #(Puanlama: 1:Lokal, 2:Boya, 3:Değişen)
+    for parca, puan in hasar_sozlugu.items():
+        if parca in tahmin_df.columns:
+            tahmin_df[parca] = puan
 
-kullanici_araci = kullanici_araci.reindex(columns=X.columns, fill_value=0)
-tahmini_fiyat = model.predict(kullanici_araci)[0]
+    fiyat = model.predict(tahmin_df)[0]
+    return fiyat
 
-print(f"Tahmini Piyasa Fiyati: {tahmini_fiyat:,.2f} TL")
+# Örn: 2021 Egea (Marka Kodu: 1), Manuel (Vites: 0)
+test_hasar = {
+    "front-hood": 2,          # Kaput Boyalı
+    "front-left-mudguard": 3  # Sol ön çamurluk değişen
+}
+
+tahmini_deger = fiyat_tahmin_et(2021, 45000, 1, 0, test_hasar)
+
+print(f"ARAÇ ANALİZİ")
+print(f"Tahmini Piyasa Değeri: {tahmini_deger:,.2f} TL")

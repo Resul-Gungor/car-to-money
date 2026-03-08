@@ -1,20 +1,21 @@
 # Araç Fiyat Tahmin Projesi
 
-Bu proje, Python kullanarak araçların özelliklerine göre fiyat tahmini yapmaktadır.
+Bu proje, Python kullanarak araçların özelliklerine göre dinamik fiyat tahmini yapmaktadır.(XGBoost)
 
 ## Kullanılan Teknolojiler
 * Python
-* Veri seti (CSV)
 
 ### Proje Durumu
 
 - [x] Boyanan ve değişen parçaların sisteme eklenmesi
-- [ ] Ağır hasar kaydı parametresi eklenmesi
-- [ ] Lokal boyalı parametresi eklenmesi
-- [ ] Tramer kaydı parametresi eklenmesi
+- [x] Ağır hasar kaydı parametresi eklenmesi
+- [x] Lokal boyalı parametresi eklenmesi
 - [x] Veri setindeki fiyat katsayılarının güncellenmesi
 - [x] Modelin eğitilmesi ve test edilmesi
-- [ ] DAha geniş bir veri setinin elde edilmesi (kaggle ya da manuel)
+- [x] Daha geniş bir veri setinin elde edilmesi (kaggle ya da manuel)
+#
+- [ ] API yazımı
 - [ ] Arayüz tasarımı
 - [ ] tarayıcı modu 
 - [ ] mobil modu
+#
